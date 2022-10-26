@@ -4,18 +4,18 @@
       Hour of the day
     </div>
     <div v-else-if="type === 'weeks'">
-      Week
+      Daily Avg by Week
     </div>
     <div v-else-if="type === 'months'">
-      Month
+      Daily Avg by Month
     </div>
 
     <div class="chart">
       <div v-for="(key, i) in truncatedKeys" :key="key" class="item">
         <span
           class="value"
-          :style="{ height: (group[key].count / max) * 100 + '%' }"
-          ><span>{{ group[key].count }}</span></span
+          :style="{ height: (group[key][value] / max) * 100 + '%' }"
+          ><span>{{ formatValue(group[key][value]) }}</span></span
         >
         <span class="label" v-if="i % 2 === 0">{{ group[key].value }}</span>
       </div>
@@ -33,15 +33,19 @@ export default class DataInfo extends Vue {
   @Prop() private keys!: string[];
   @Prop() private type!: 'hours' | 'weeks' | 'months';
 
+  get value() {
+    return this.group[this.keys[0]].average ? 'average' : 'count';
+  }
+
   get max() {
     return this.keys.reduce(
-      (prev, next) => Math.max(this.group[next].count, prev),
+      (prev, next) => Math.max(this.group[next][this.value] || 0, prev),
       0
     );
   }
 
   get truncatedKeys() {
-    const max = 24;
+    const max = 36;
     if (this.keys.length < max) return this.keys;
     return Array.from(this.keys).splice(
       this.keys.length - max,
@@ -53,6 +57,10 @@ export default class DataInfo extends Vue {
     const date = new Date(0, 0, 0, hour);
     const h = (date.getHours() + 24) % 12 || 12;
     return h + (hour < 12 ? ' AM' : ' PM');
+  }
+
+  formatValue(value: number) {
+    return this.value === 'average' ? value.toFixed(2) : value;
   }
 }
 </script>

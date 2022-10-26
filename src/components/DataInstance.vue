@@ -15,6 +15,7 @@
           {{ stats.first.ago.days }} days of {{ icon }} (est.
           {{ stats.first.date }})
         </li>
+        <li>Last {{ icon }} {{ stats.last.date }} {{ stats.last.time }}</li>
         <li>
           {{ stats.total }} &times; {{ icon }} ({{
             (stats.total / stats.first.ago.days).toFixed(3)
@@ -42,6 +43,8 @@ export interface Group {
     count: number;
     value: number;
     year?: number;
+    average?: number;
+    divisible?: number;
   };
 }
 
@@ -67,8 +70,10 @@ export default class DataInstance extends Vue {
   get stats() {
     const len = this.sortedByTime.length;
     const first = this.sortedByTime[len - 1];
+    const last = this.sortedByTime[0];
     return {
       first,
+      last,
       total: len,
     };
   }
@@ -90,13 +95,32 @@ export default class DataInstance extends Vue {
       const monthId = `${info.year}-${info.month.toString().padStart(2, '0')}`;
       const hourId = info.hour.toString().padStart(2, '0');
       if (!weeks[weekId])
-        weeks[weekId] = { count: 0, value: info.week, year: info.year };
+        weeks[weekId] = {
+          count: 0,
+          value: info.week,
+          year: info.year,
+          average: 0,
+          divisible: 7,
+        };
       weeks[weekId].count++;
       if (!months[monthId])
-        months[monthId] = { count: 0, value: info.month, year: info.year };
+        months[monthId] = {
+          count: 0,
+          value: info.month,
+          year: info.year,
+          average: 0,
+          divisible: info.daysInMonth,
+        };
       months[monthId].count++;
       if (!hours[hourId]) hours[hourId] = { count: 0, value: info.hour };
       hours[hourId].count++;
+    });
+    Object.keys(weeks).forEach(week => {
+      weeks[week].average = weeks[week].count / (weeks[week].divisible || 1);
+    });
+    Object.keys(months).forEach(month => {
+      months[month].average =
+        months[month].count / (months[month].divisible || 1);
     });
     return { hours, weeks, months };
   }

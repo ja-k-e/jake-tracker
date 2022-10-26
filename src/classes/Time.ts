@@ -8,8 +8,12 @@ type AgoInterval =
   | 'years';
 type Ago = { [K in AgoInterval]: number };
 
-type InfoType = 'year' | 'month' | 'week' | 'day' | 'hour';
+type InfoType = 'year' | 'month' | 'week' | 'day' | 'hour' | 'daysInMonth';
 type Info = { [K in InfoType]: number };
+
+function getDaysInMonth(year: number, month: number) {
+  return new Date(year, month, 0).getDate();
+}
 
 function isLeapYear(date: Date) {
   const year = date.getFullYear();
@@ -73,6 +77,7 @@ export default class Time {
       week: Math.floor(day / 7),
       day,
       hour: D.getHours(),
+      daysInMonth: getDaysInMonth(D.getFullYear(), D.getMonth() + 1),
     };
   }
 
