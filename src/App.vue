@@ -164,7 +164,7 @@ section {
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
   box-sizing: border-box;
-  padding: 2rem;
+  padding: 1rem;
   background: #111;
   color: white;
 }
