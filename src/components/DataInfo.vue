@@ -60,7 +60,7 @@ export default class DataInfo extends Vue {
   }
 
   formatValue(value: number) {
-    return this.value === 'average' ? value.toFixed(1) : value;
+    return this.value === 'average' ? value.toFixed(3) : value;
   }
 }
 </script>
@@ -70,13 +70,13 @@ export default class DataInfo extends Vue {
   border-bottom: 2px solid white;
   display: flex;
   height: 90px;
-  margin-top: 20px;
+  margin-top: 30px;
   position: relative;
 }
 .chart .item {
   height: 100%;
   flex: 1;
-  font-size: 0.5rem;
+  font-size: 0.4rem;
   position: relative;
 }
 .chart .item + .item {
@@ -105,12 +105,11 @@ export default class DataInfo extends Vue {
   width: 100%;
 }
 .chart .item .value span {
-  bottom: calc(100% + 0px);
-  font-size: 0.8em;
-  left: 0;
+  bottom: 100%;
+  left: 50%;
   position: absolute;
   text-align: center;
-  transform: rotate(-45deg);
+  transform: rotate(-90deg) translateX(-50%) translateY(-50%);
   transform-origin: 0 0;
   width: 100%;
 }
