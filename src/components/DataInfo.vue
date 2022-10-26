@@ -60,46 +60,58 @@ export default class DataInfo extends Vue {
   }
 
   formatValue(value: number) {
-    return this.value === 'average' ? value.toFixed(2) : value;
+    return this.value === 'average' ? value.toFixed(1) : value;
   }
 }
 </script>
 
 <style scoped>
 .chart {
+  border-bottom: 2px solid white;
   display: flex;
-  height: 120px;
+  height: 90px;
   margin-top: 20px;
   position: relative;
 }
 .chart .item {
   height: 100%;
   flex: 1;
-  font-size: 0.7rem;
+  font-size: 0.5rem;
   position: relative;
 }
 .chart .item + .item {
   margin-left: 2px;
 }
 
+.chart .item .value::after {
+  border-right: 2px solid white;
+  bottom: 0;
+  content: '';
+  left: calc(50% - 1px);
+  position: absolute;
+  top: 0;
+}
 .chart .item .value {
-  background: white;
+  /* background: white; */
   bottom: 0;
   display: block;
   position: absolute;
   width: 100%;
 }
 .chart .item .label {
-  top: 100%;
+  top: calc(100% + 2px);
   display: block;
   position: absolute;
   width: 100%;
 }
 .chart .item .value span {
   bottom: calc(100% + 0px);
+  font-size: 0.8em;
   left: 0;
-  text-align: center;
   position: absolute;
+  text-align: center;
+  transform: rotate(-45deg);
+  transform-origin: 0 0;
   width: 100%;
 }
 </style>
